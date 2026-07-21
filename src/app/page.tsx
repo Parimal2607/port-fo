@@ -111,7 +111,7 @@ export default function Home() {
   const { isPlaying } = usePlayer();
 
   return (
-    <div className={`flex flex-col h-dvh ${isPlaying ? "dance-active" : ""}`}>
+    <div className="flex flex-col h-dvh">
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
 

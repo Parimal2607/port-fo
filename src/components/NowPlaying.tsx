@@ -36,7 +36,7 @@ export default function NowPlaying({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-gradient-to-b from-[#333] to-spotify-base flex flex-col animate-slide-up">
+    <div className="fixed inset-0 z-[100] bg-gradient-to-b from-[#333] to-spotify-base bg-opacity-90 backdrop-blur-md flex flex-col animate-slide-up p-3 pb-safe-bottom pt-safe-top" style={{ maxHeight: "100dvh", overflow: "hidden" }}>
       {/* Top bar */}
       <div className="flex items-center justify-between px-4 pt-12 pb-2">
         <button
@@ -67,7 +67,7 @@ export default function NowPlaying({
       </div>
 
       {/* Album Art */}
-      <div className="flex-1 flex flex-col items-center justify-center px-8">
+      <div className="flex-1 flex flex-col items-center justify-center px-8 pb-safe-bottom pt-safe-top" style={{ minHeight: "var(--safe-area-inset-bottom)" }}> 
         <div className="w-full max-w-[320px] aspect-square rounded-full bg-gradient-to-br from-spotify-green to-[#169c46] shadow-2xl flex items-center justify-center mb-8">
           <span className="text-8xl font-black text-white">P</span>
         </div>
