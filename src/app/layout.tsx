@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: "Parimal Sharma — Frontend Engineer Portfolio",
   description:
     "Senior Frontend Engineer with 4+ years of experience building scalable SaaS platforms, enterprise applications, and AI-powered products.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
