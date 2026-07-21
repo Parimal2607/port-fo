@@ -37,6 +37,10 @@ body {
   overflow: hidden;
 }
 
+footer {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
