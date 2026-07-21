@@ -1,19 +1,120 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 export default function PlayerBar() {
   const [liked, setLiked] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const progressRef = useRef<HTMLDivElement | null>(null);
+
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2, "0")}`;
+  };
+
+  const togglePlay = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    setIsPlaying(!isPlaying);
+  }, [isPlaying]);
+
+  const handleTimeUpdate = useCallback(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      setCurrentTime(audio.currentTime);
+    }
+  }, []);
+
+  const handleLoadedMetadata = useCallback(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      setDuration(audio.duration);
+    }
+  }, []);
+
+  const handleEnded = useCallback(() => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+    }
+  }, []);
+
+  const handleProgressClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const pct = x / rect.width;
+      const audio = audioRef.current;
+      if (audio && duration) {
+        audio.currentTime = pct * duration;
+      }
+    },
+    [duration]
+  );
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("ended", handleEnded);
+    return () => {
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [handleTimeUpdate, handleLoadedMetadata, handleEnded]);
+
+  const progressPct = duration ? (currentTime / duration) * 100 : 0;
+
+  const WaveBars = ({ playing }: { playing: boolean }) => (
+    <div className={`flex items-end gap-[2px] h-4 ${playing ? "" : "opacity-30"}`}>
+      {[4, 6, 8, 6, 4, 7, 5, 3].map((h, i) => (
+        <span
+          key={i}
+          className={`w-[3px] bg-spotify-green rounded-full ${
+            playing ? "animate-wave" : ""
+          }`}
+          style={{
+            height: `${h}px`,
+            animationDelay: playing ? `${i * 0.12}s` : "0s",
+            animationDuration: `${0.4 + Math.random() * 0.3}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
 
   return (
     <>
+      <audio
+        ref={audioRef}
+        src="/audio.mp3"
+        preload="metadata"
+      />
+
       {/* Mobile player strip */}
       <footer className="lg:hidden h-14 bg-spotify-player border-t border-spotify-border flex-shrink-0 flex items-center justify-between px-3 z-50">
         <div className="flex items-center gap-2 min-w-0 flex-1">
-          <div className="w-10 h-10 bg-spotify-elevated rounded flex-shrink-0 flex items-center justify-center">
-            <svg viewBox="0 0 24 24" className="w-5 h-5 text-spotify-green" fill="currentColor">
-              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm-2 17l-1-1 3-3-3-3 1-1 4 4-4 4zm4-2l-1-1 3-3-3-3 1-1 4 4-4 4z" />
-            </svg>
+          <div className="w-10 h-10 bg-spotify-elevated rounded flex-shrink-0 flex items-center justify-center overflow-hidden">
+            {isPlaying ? (
+              <WaveBars playing />
+            ) : (
+              <svg viewBox="0 0 24 24" className="w-5 h-5 text-spotify-green" fill="currentColor">
+                <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm-2 17l-1-1 3-3-3-3 1-1 4 4-4 4zm4-2l-1-1 3-3-3-3 1-1 4 4-4 4z" />
+              </svg>
+            )}
           </div>
           <div className="min-w-0">
             <p className="text-xs text-white font-medium truncate leading-tight">Parimal Sharma</p>
@@ -29,10 +130,19 @@ export default function PlayerBar() {
           </button>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <button className="w-7 h-7 bg-white rounded-full flex items-center justify-center text-black">
-            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 ml-0.5" fill="currentColor">
-              <path d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z" />
-            </svg>
+          <button
+            onClick={togglePlay}
+            className="w-7 h-7 bg-white rounded-full flex items-center justify-center text-black"
+          >
+            {isPlaying ? (
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor">
+                <path d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 ml-0.5" fill="currentColor">
+                <path d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z" />
+              </svg>
+            )}
           </button>
         </div>
       </footer>
@@ -42,9 +152,13 @@ export default function PlayerBar() {
         {/* Track Info */}
         <div className="flex items-center gap-3 w-[30%] min-w-[180px]">
           <div className="w-14 h-14 bg-spotify-elevated rounded flex-shrink-0 flex items-center justify-center overflow-hidden">
-            <svg viewBox="0 0 24 24" className="w-7 h-7 text-spotify-green" fill="currentColor">
-              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm-2 17l-1-1 3-3-3-3 1-1 4 4-4 4zm4-2l-1-1 3-3-3-3 1-1 4 4-4 4z" />
-            </svg>
+            {isPlaying ? (
+              <WaveBars playing />
+            ) : (
+              <svg viewBox="0 0 24 24" className="w-7 h-7 text-spotify-green" fill="currentColor">
+                <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm-2 17l-1-1 3-3-3-3 1-1 4 4-4 4zm4-2l-1-1 3-3-3-3 1-1 4 4-4 4z" />
+              </svg>
+            )}
           </div>
           <div className="min-w-0">
             <p className="text-sm text-white font-medium truncate leading-tight">Parimal Sharma</p>
@@ -73,10 +187,19 @@ export default function PlayerBar() {
                 <path d="M9.195 18.44c1.25.713 2.805-.19 2.805-1.629v-2.34l6.945 3.968c1.25.714 2.805-.188 2.805-1.628V7.172c0-1.441-1.555-2.342-2.805-1.628L12 9.516V7.172c0-1.441-1.555-2.342-2.805-1.628l-7.108 4.062c-1.26.72-1.26 2.536 0 3.256l7.108 4.061z" />
               </svg>
             </button>
-            <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-black hover:scale-105 transition-transform">
-              <svg viewBox="0 0 24 24" className="w-5 h-5 ml-0.5" fill="currentColor">
-                <path d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z" />
-              </svg>
+            <button
+              onClick={togglePlay}
+              className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-black hover:scale-105 transition-transform"
+            >
+              {isPlaying ? (
+                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
+                  <path d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" className="w-5 h-5 ml-0.5" fill="currentColor">
+                  <path d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z" />
+                </svg>
+              )}
             </button>
             <button className="text-spotify-muted hover:text-spotify-text transition-colors">
               <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
@@ -90,12 +213,25 @@ export default function PlayerBar() {
             </button>
           </div>
           <div className="w-full flex items-center gap-2">
-            <span className="text-xs text-spotify-muted w-10 text-right">1:23</span>
-            <div className="flex-1 h-1 bg-spotify-elevated rounded-full group cursor-pointer relative">
-              <div className="h-full w-[45%] bg-white rounded-full group-hover:bg-spotify-green transition-colors" />
-              <div className="absolute top-1/2 left-[45%] -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow" />
+            <span className="text-xs text-spotify-muted w-10 text-right tabular-nums">{formatTime(currentTime)}</span>
+            <div
+              ref={progressRef}
+              onClick={handleProgressClick}
+              className="flex-1 h-1 bg-spotify-elevated rounded-full group cursor-pointer relative"
+            >
+              <div
+                className="h-full rounded-full group-hover:bg-spotify-green transition-colors"
+                style={{
+                  width: `${progressPct}%`,
+                  backgroundColor: isPlaying ? "#1db954" : "#ffffff",
+                }}
+              />
+              <div
+                className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow"
+                style={{ left: `${progressPct}%`, marginLeft: "-6px" }}
+              />
             </div>
-            <span className="text-xs text-spotify-muted w-10">4:56</span>
+            <span className="text-xs text-spotify-muted w-10 tabular-nums">{formatTime(duration)}</span>
           </div>
         </div>
 

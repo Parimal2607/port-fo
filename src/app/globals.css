@@ -57,3 +57,13 @@ input[type="range"]::-webkit-slider-runnable-track {
   height: 4px;
   border-radius: 2px;
 }
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+
+.animate-wave {
+  animation: wave var(--wave-duration, 0.5s) ease-in-out infinite;
+  transform-origin: bottom;
+}
