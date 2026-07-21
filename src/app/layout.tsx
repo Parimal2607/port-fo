@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import { PlayerProvider } from "@/components/PlayerContext";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -34,7 +35,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#121212" />
       </head>
-      <body className="h-dvh flex flex-col overflow-hidden">{children}</body>
+      <body className="h-dvh flex flex-col overflow-hidden">
+        <PlayerProvider>{children}</PlayerProvider>
+      </body>
     </html>
   );
 }

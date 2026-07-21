@@ -67,6 +67,58 @@ input[type="range"]::-webkit-slider-runnable-track {
   50% { transform: scaleY(1); }
 }
 
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dance-subtle {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(0.3deg); }
+  50% { transform: translateY(0px) rotate(0deg); }
+  75% { transform: translateY(-1.5px) rotate(-0.2deg); }
+}
+
+.dance-active section h1,
+.dance-active section h2,
+.dance-active section h3,
+.dance-active section p,
+.dance-active section span,
+.dance-active .group,
+.dance-active nav a,
+.dance-active aside a,
+.dance-active aside span,
+.dance-active footer span,
+.dance-active footer p {
+  animation: dance-subtle var(--dance-duration, 2.8s) ease-in-out infinite;
+  animation-delay: var(--dance-delay, 0s);
+}
+
+.dance-active section:nth-child(1) h1 { --dance-delay: 0s; }
+.dance-active section:nth-child(1) p { --dance-delay: 0.15s; }
+.dance-active section:nth-child(2) h2 { --dance-delay: 0.3s; }
+.dance-active section:nth-child(2) .group { --dance-delay: 0.4s; }
+.dance-active section:nth-child(3) h2 { --dance-delay: 0.5s; }
+.dance-active section:nth-child(3) .group { --dance-delay: 0.6s; --dance-duration: 3s; }
+.dance-active section:nth-child(4) h2 { --dance-delay: 0.7s; }
+.dance-active section:nth-child(4) .group { --dance-delay: 0.8s; }
+.dance-active section:nth-child(5) h2 { --dance-delay: 0.9s; }
+.dance-active section:nth-child(5) a { --dance-delay: 1s; --dance-duration: 3.2s; }
+
+.dance-active aside li:nth-child(1) a { --dance-delay: 0.05s; }
+.dance-active aside li:nth-child(2) a { --dance-delay: 0.15s; }
+.dance-active aside li:nth-child(3) a { --dance-delay: 0.25s; }
+.dance-active aside li:nth-child(4) a { --dance-delay: 0.35s; }
+.dance-active aside li:nth-child(5) a { --dance-delay: 0.45s; }
+.dance-active aside li:nth-child(6) a { --dance-delay: 0.55s; }
+.dance-active aside li:nth-child(7) a { --dance-delay: 0.65s; }
+.dance-active aside li:nth-child(8) a { --dance-delay: 0.75s; }
+.dance-active aside li:nth-child(9) a { --dance-delay: 0.85s; }
+
 .animate-wave {
   animation: wave var(--wave-duration, 0.5s) ease-in-out infinite;
   transform-origin: bottom;

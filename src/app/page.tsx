@@ -1,9 +1,12 @@
+"use client";
+
 import Sidebar from "@/components/Sidebar";
 import PlayerBar from "@/components/PlayerBar";
 import MobileNav from "@/components/MobileNav";
 import ExperienceCard from "@/components/ExperienceCard";
 import ProjectCard from "@/components/ProjectCard";
 import { SectionCard, SectionHeading } from "@/components/SectionCard";
+import { usePlayer } from "@/components/PlayerContext";
 
 const skills = [
   { name: "React.js", gradient: "linear-gradient(135deg, #61dafb, #282c34)" },
@@ -105,8 +108,10 @@ const certifications = [
 ];
 
 export default function Home() {
+  const { isPlaying } = usePlayer();
+
   return (
-    <div className="flex flex-col h-dvh">
+    <div className={`flex flex-col h-dvh ${isPlaying ? "dance-active" : ""}`}>
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
 

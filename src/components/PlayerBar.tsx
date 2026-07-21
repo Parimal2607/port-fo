@@ -1,12 +1,15 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import NowPlaying from "./NowPlaying";
+import { usePlayer } from "./PlayerContext";
 
 export default function PlayerBar() {
+  const { isPlaying, setIsPlaying } = usePlayer();
   const [liked, setLiked] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [showNowPlaying, setShowNowPlaying] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const progressRef = useRef<HTMLDivElement | null>(null);
@@ -106,7 +109,10 @@ export default function PlayerBar() {
 
       {/* Mobile player strip */}
       <footer className="lg:hidden h-14 bg-spotify-player border-t border-spotify-border flex-shrink-0 flex items-center justify-between px-3 z-50">
-        <div className="flex items-center gap-2 min-w-0 flex-1">
+        <button
+          onClick={() => setShowNowPlaying(true)}
+          className="flex items-center gap-2 min-w-0 flex-1 text-left"
+        >
           <div className="w-10 h-10 bg-spotify-elevated rounded flex-shrink-0 flex items-center justify-center overflow-hidden">
             {isPlaying ? (
               <WaveBars playing />
@@ -120,15 +126,15 @@ export default function PlayerBar() {
             <p className="text-xs text-white font-medium truncate leading-tight">Parimal Sharma</p>
             <p className="text-[10px] text-spotify-subtext truncate leading-tight">Senior Frontend Engineer</p>
           </div>
-          <button
-            onClick={() => setLiked(!liked)}
-            className={`ml-auto mr-2 flex-shrink-0 transition-colors ${liked ? "text-spotify-heart" : "text-spotify-muted hover:text-spotify-subtext"}`}
-          >
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-            </svg>
-          </button>
-        </div>
+        </button>
+        <button
+          onClick={() => setLiked(!liked)}
+          className={`ml-auto mr-2 flex-shrink-0 transition-colors ${liked ? "text-spotify-heart" : "text-spotify-muted hover:text-spotify-subtext"}`}
+        >
+          <svg viewBox="0 0 24 24" className="w-4 h-4" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+          </svg>
+        </button>
         <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={togglePlay}
@@ -150,7 +156,10 @@ export default function PlayerBar() {
       {/* Desktop player bar */}
       <footer className="hidden lg:flex h-[90px] bg-spotify-player border-t border-spotify-border flex-shrink-0 items-center justify-between px-4 z-50">
         {/* Track Info */}
-        <div className="flex items-center gap-3 w-[30%] min-w-[180px]">
+        <button
+          onClick={() => setShowNowPlaying(true)}
+          className="flex items-center gap-3 w-[30%] min-w-[180px] text-left"
+        >
           <div className="w-14 h-14 bg-spotify-elevated rounded flex-shrink-0 flex items-center justify-center overflow-hidden">
             {isPlaying ? (
               <WaveBars playing />
@@ -164,15 +173,15 @@ export default function PlayerBar() {
             <p className="text-sm text-white font-medium truncate leading-tight">Parimal Sharma</p>
             <p className="text-xs text-spotify-subtext truncate leading-tight">Senior Frontend Engineer</p>
           </div>
-          <button
-            onClick={() => setLiked(!liked)}
-            className={`ml-2 flex-shrink-0 transition-colors ${liked ? "text-spotify-heart" : "text-spotify-muted hover:text-spotify-subtext"}`}
-          >
-            <svg viewBox="0 0 24 24" className="w-5 h-5" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-            </svg>
-          </button>
-        </div>
+        </button>
+        <button
+          onClick={() => setLiked(!liked)}
+          className={`ml-2 flex-shrink-0 transition-colors ${liked ? "text-spotify-heart" : "text-spotify-muted hover:text-spotify-subtext"}`}
+        >
+          <svg viewBox="0 0 24 24" className="w-5 h-5" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+          </svg>
+        </button>
 
         {/* Player Controls */}
         <div className="flex flex-col items-center gap-1 w-[40%] max-w-[600px]">
@@ -260,6 +269,24 @@ export default function PlayerBar() {
           </button>
         </div>
       </footer>
+      {showNowPlaying && (
+        <NowPlaying
+          isPlaying={isPlaying}
+          currentTime={currentTime}
+          duration={duration}
+          liked={liked}
+          progressPct={progressPct}
+          onTogglePlay={togglePlay}
+          onSeek={(pct) => {
+            const audio = audioRef.current;
+            if (audio && duration) {
+              audio.currentTime = pct * duration;
+            }
+          }}
+          onToggleLike={() => setLiked(!liked)}
+          onClose={() => setShowNowPlaying(false)}
+        />
+      )}
     </>
   );
 }
