@@ -310,7 +310,7 @@ export default function Home() {
             {/* Contact Section */}
             <section id="contact" className="mb-10">
               <SectionHeading title="Contact" subtitle="Let's connect" />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
                 <a
                   href="tel:+919409285672"
                   className="bg-spotify-surface hover:bg-spotify-card-hover transition-colors rounded-md p-4 flex items-center gap-4"
@@ -369,6 +369,22 @@ export default function Home() {
                   <div>
                     <p className="text-white text-sm font-semibold truncate">Parimal Sharma</p>
                     <p className="text-spotify-subtext text-xs">LinkedIn</p>
+                  </div>
+                </a>
+                <a
+                  href="https://codepen.io/Parimal2607"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-spotify-surface hover:bg-spotify-card-hover transition-colors rounded-md p-4 flex items-center gap-4"
+                >
+                  <div className="w-12 h-12 rounded-full bg-spotify-elevated flex items-center justify-center flex-shrink-0">
+                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-spotify-green" fill="currentColor">
+                      <path d="M12 0C10.12 0 9.93 1.26 9.93 1.26l-.01.24c0 .68.51.95.51.95.39.14.62.12.62.12.62-.16 1.11.07 1.11.07.69.4.2 1.64.2 1.64l-.38.58c-.72 1.09-2.31 1.46-2.31 1.46H2.85c-.2.03-.36.28-.36.28-.07.19.02.35.02.35.17.31.5.25.5.25l1.23.1v6.06l-1.23.09c-.5.02-.43.42-.43.42.1.35.45.24.45.24h5.38c1.77.04 3.06.75 3.06.75 1.09.63.57 1.73.57 1.73l-.17.25c-1.29 1.9-4.1 1.41-4.1 1.41l-.29-.03c-.22-.05-.35.17-.35.17l-.14.4c-.14.42.31.53.31.53l.07.01c2.66.86 5.21-.61 5.21-.61 1.2-.67 1.57-1.72 1.57-1.72.71-1.58.53-3.45.53-3.45l.19-.06c1.76 1.54 2.03 3.39 2.03 3.39.07.41.26 1.04.26 1.04.12.36.33.45.4.66l.02.1c.08.36.26.47.26.47.29.29.62-.19.62-.19.15-.28-.03-.65-.03-.65-.24-.67-.29-1.24-.29-1.24l-.52-3.19c-.15-.83-.67-1.28-.67-1.28-.19-.22-.49-.27-.62-.33l.07.04c-.06-.12-.19-.26-.19-.26-.2-.18-.03-.42-.03-.42.05-.17.08-.3.08-.3.19-.56-.47-.8-.47-.8-4.86-2.33-4.76-7.78-4.76-7.78 0-3.16-1.88-4.58-1.88-4.58L16.5.98C14.85-.12 12 0 12 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-semibold truncate">Parimal2607</p>
+                    <p className="text-spotify-subtext text-xs">CodePen</p>
                   </div>
                 </a>
               </div>
