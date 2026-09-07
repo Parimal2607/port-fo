@@ -133,7 +133,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <a
-                href="/parimal-sharma-front-dev.pdf"
+                href="/Parimal.pdf"
                 download
                 className="flex items-center justify-center gap-2 border border-white/20 text-white text-[11px] font-bold w-9 h-9 sm:w-auto sm:px-4 sm:py-2 rounded-full hover:scale-105 hover:border-white/40 transition-all uppercase tracking-wider"
               >
